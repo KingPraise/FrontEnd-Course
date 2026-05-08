@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Development for Absolute Beginners | King Praise</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Syne:wght@400..800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS VARIABLES */
+        :root {
+            --primary-bg: #0a0a12;
+            --secondary-bg: #0f0f1e;
+            --accent: #7c3aed;
+            --accent-light: #a78bfa;
+            --text-primary: #f0ecff;
+            --text-muted: #6b6080;
+            --card-bg: #13101f;
+            --card-border: rgba(124, 58, 237, 0.15);
+            --cta-hover: #6d28d9;
+            --success: #059669;
+            --max-width: 1100px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.95); }
+        }
+
+        .animate-pulse-slow {
+            animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* RESET & BASE */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* GLOW OVERLAYS */
+        .glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: var(--accent);
+            opacity: 0.1;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .glow-top { top: -10%; right: -5%; }
+        .glow-bottom { bottom: -10%; left: -5%; }
+
+        h1, h2, h3, h4 {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            line-height: 1.05;
+            color: var(--text-primary);
+            letter-spacing: -0.03em;
+        }
+
+        p {
+            line-height: 1.7;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        section {
+            padding: 120px 0;
+        }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'DM Sans', sans-serif;
+            border: none;
+            gap: 12px;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(124, 58, 237, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--cta-hover);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 20px 35px -10px rgba(124, 58, 237, 0.5);
+        }
+
+        .btn-ghost {
+            background-color: transparent;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: var(--text-primary);
+        }
+
+        .btn-ghost:hover {
+            background-color: rgba(124, 58, 237, 0.05);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* NAVIGATION */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background-color: transparent;
+            padding: 32px 0;
+            transition: var(--transition);
+            border-bottom: 1px solid transparent;
+        }
+
+        nav.scrolled {
+            background-color: rgba(10, 10, 18, 0.8);
+            padding: 16px 0;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: 900;
+            color: var(--accent);
+            letter-spacing: -2px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-light);
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            padding-top: 100px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 14px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 100px;
+            margin-bottom: 2rem;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-badge span {
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent-light);
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--text-muted);
+            max-width: 750px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        .hero-btns {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            background-color: var(--secondary-bg);
+            padding: 8px 16px;
+            border-radius: 100px;
+            border: 1px solid var(--card-border);
+        }
+
+        .badge i {
+            color: var(--accent);
+        }
+
+        /* SOCIAL PROOF BAR */
+        .social-proof {
+            padding: 30px 0;
+            background-color: var(--secondary-bg);
+            border-top: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .social-proof-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            font-weight: 500;
+        }
+
+        .stars {
+            color: #fbbf24;
+        }
+
+        /* PAIN SECTION */
+        .pain-section {
+            background-color: var(--primary-bg);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .pain-card {
+            background-color: var(--card-bg);
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            transition: var(--transition);
+        }
+
+        .pain-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+        }
+
+        .pain-card i {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .pain-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .pain-card p {
+            color: var(--text-muted);
+        }
+
+        /* WHAT YOU'LL LEARN */
+        .learning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem 3rem;
+        }
+
+        .learning-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 1rem;
+            background-color: var(--secondary-bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .learning-item i {
+            color: var(--success);
+            padding-top: 5px;
+        }
+
+        .learning-item span {
+            font-weight: 500;
+        }
+
+        /* PROJECTS SHOWCASE */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .project-card:hover {
+            border-color: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .project-icon {
+            height: 180px;
+            background-color: var(--secondary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-info h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .project-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background-color: rgba(124, 58, 237, 0.1);
+            color: var(--accent-light);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        /* CURRICULUM ACCORDION */
+        .curriculum-accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .accordion-item {
+            margin-bottom: 1rem;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: var(--card-bg);
+        }
+
+        .accordion-header {
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+
+        .accordion-header:hover {
+            background-color: var(--secondary-bg);
+        }
+
+        .accordion-header h3 {
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .accordion-header .video-count {
+            font-size: 0.85rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .accordion-header i {
+            transition: var(--transition);
+        }
+
+        .accordion-item.active .accordion-header i {
+            transform: rotate(180deg);
+            color: var(--accent);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            background-color: rgba(15, 15, 30, 0.5);
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 500px;
+        }
+
+        .accordion-inner {
+            padding: 0 2rem 2rem;
+        }
+
+        .video-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .video-entry {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+        }
+
+        .video-entry i {
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        /* WHO THIS IS FOR */
+        .who-is-for {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .who-card {
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+        }
+
+        .is-for {
+            background-color: rgba(5, 150, 105, 0.05);
+            border-color: rgba(5, 150, 105, 0.2);
+        }
+
+        .is-not-for {
+            background-color: rgba(107, 96, 128, 0.05);
+        }
+
+        .who-card h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .who-list li {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .who-list i.fa-check { color: var(--success); }
+        .who-list i.fa-xmark { color: #ef4444; }
+
+        /* AFTER COURSE */
+        .after-course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .after-item i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .after-item h3 {
+            margin-bottom: 1rem;
+        }
+
+        .after-item p {
+            color: var(--text-muted);
+        }
+
+        /* EARNINGS SECTION */
+        .earnings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .earnings-card {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .earnings-card h3 {
+            font-size: 1.25rem;
+            color: var(--accent-light);
+            margin-bottom: 1rem;
+        }
+
+        .earnings-card .amount {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .earnings-card .period {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .disclaimer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* PRICING SECTION */
+        .pricing-section {
+            background: radial-gradient(circle at center, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+        }
+
+        .pricing-card {
+            max-width: 550px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 5rem 3.5rem;
+            border-radius: 32px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 30px 60px -15px rgba(124, 58, 237, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: 'BEST VALUE';
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 900;
+            padding: 8px 30px;
+            transform: rotate(0deg);
+            border-bottom-left-radius: 12px;
+            letter-spacing: 0.1em;
+        }
+
+        .price-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: 'Syne', sans-serif;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .pricing-list {
+            text-align: left;
+            margin-bottom: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .pricing-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+
+        .pricing-list i {
+            color: var(--accent);
+        }
+
+        .cta-note {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* FAQ SECTION */
+        .faq-accordion {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* FINAL CTA */
+        .final-cta {
+            background-color: var(--secondary-bg);
+            text-align: center;
+            padding: 120px 0;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .final-cta h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .final-cta p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        .final-cta-badges {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid var(--card-border);
+            text-align: center;
+        }
+
+        .footer-logo {
+            margin-bottom: 1rem;
+        }
+
+        .footer-tagline {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .copyright {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid var(--accent);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal i {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+        }
+
+        .modal h2 {
+            margin-bottom: 1rem;
+        }
+
+        .modal p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none; /* Mobile menu logic omitted for simplicity unless requested */
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .hero-badges {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .hero-btns {
+                flex-direction: column;
+                padding: 0 20px;
+            }
+
+            .learning-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card {
+                padding: 3rem 1.5rem;
+            }
+
+            .price-display {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow glow-top"></div>
+    <div class="glow glow-bottom"></div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="enrollModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <i class="fas fa-rocket"></i>
+            <h2>Ready to Enroll!</h2>
+            <p>🎉 Excellent choice! Send a message to <strong>+234 704 043 0580</strong> to complete your purchase and receive your private course link.</p>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <a href="https://wa.me/2347040430580?text=Hello%20King%20Praise,%20I'm%20interested%20in%20enrolling%20in%20the%20Frontend%20Development%20course." target="_blank" class="btn btn-primary" style="width: 100%;">
+                    <i class="fab fa-whatsapp"></i> Message on WhatsApp
+                </a>
+                <button class="btn btn-ghost" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <nav id="navbar">
+        <div class="container">
+            <a href="#" class="logo">KP.</a>
+            <div class="nav-links">
+                <a href="#learn">Learning</a>
+                <a href="#projects">Projects</a>
+                <a href="#curriculum">Curriculum</a>
+                <a href="#pricing">Pricing</a>
+                <button class="btn btn-primary" onclick="openModal()" style="padding: 10px 24px; border-radius: 10px;">Enroll Now</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="status-badge">
+                <span class="pulse-dot animate-pulse-slow"></span>
+                <span>Enrollment Open</span>
+            </div>
+            <h1>From <span>Zero</span> to Frontend Developer.</h1>
+            <p>Master the core of the web. Build real projects, deploy them live, and launch your career—no prior experience needed.</p>
+            <div class="hero-btns">
+                <button class="btn btn-primary" onclick="openModal()">Start Learning Today &rarr;</button>
+                <a href="#projects" class="btn btn-ghost">See What You'll Build</a>
+            </div>
+            <div class="hero-badges">
+                <div class="badge"><i class="fas fa-play-circle"></i> 30 Video Lessons</div>
+                <div class="badge"><i class="fas fa-infinity"></i> Lifetime Access</div>
+                <div class="badge"><i class="fas fa-user-friends"></i> Beginner Friendly</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL PROOF -->
+    <div class="social-proof">
+        <div class="social-proof-content">
+            <div class="stars">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <span>Join 500+ students already learning frontend development</span>
+        </div>
+    </div>
+
+    <!-- PAIN POINTS -->
+    <section class="pain-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>You've tried to learn coding before. Here's why it didn't stick.</h2>
+            </div>
+            <div class="pain-grid">
+                <div class="pain-card">
+                    <i class="fas fa-book-dead"></i>
+                    <h3>Tutorial Hell</h3>
+                    <p>Most courses teach you isolated syntax but never show you how to combine those pieces to build something real and useful.</p>
+                </div>
+                <div class="pain-card">
+                    <i class="fas fa-puzzle-piece"></i>
+                    <h3>Complexity Overload</h3>
+                    <p>They assume you already know "the basics" and skip the fundamental connections that make everything click for a beginner.</p>
+                </div>
+                <div class="pain-card">
+                    <i class="fas fa-map-signs"></i>
+                    <h3>No Clear Roadmap</h3>
+                    <p>You learn a bit of this and a bit of that, but you don't have a structured path that takes you from total zero to a live portfolio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHAT YOU'LL LEARN -->
+    <section id="learn">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything you need. Nothing you don't.</h2>
+                <p>We focus on the essential skills that actually get you hired and help you build modern websites.</p>
+            </div>
+            <div class="learning-grid">
+                <div class="learning-item"><i class="fas fa-check-circle"></i><span>Write clean HTML5 from scratch</span></div>
+                <div class="learning-item"><i class="fas fa-check-circle"></i><span>Master modern CSS including Flexbox</span></div>
+                <div class="learning-item"><i class="fas fa-check-circle"></i><span>Add interactivity with JavaScript logic</span></div>
+                <div class="learning-item"><i class="fas fa-check-circle"></i><span>Build 5 real-world portfolio projects</span></div>
+                <div class="learning-item"><i class="fas fa-check-circle"></i><span>Deploy websites live to the internet</span></div>
+                <div class="learning-item"><i class="fas fa-check-circle"></i><span>Professional workflow with Git & GitHub</span></div>
+                <div class="learning-item"><i class="fas fa-check-circle"></i><span>Create a portfolio that gets noticed</span></div>
+                <div class="learning-item"><i class="fas fa-check-circle"></i><span>Step-by-step guide to finding work</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" style="background-color: var(--secondary-bg);">
+        <div class="container">
+            <div class="section-header">
+                <h2>Five real websites. Built by you. Live on the internet.</h2>
+                <p>These aren't exercises. These are legitimate portfolio pieces that showcase your skills to employers.</p>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-icon">☕</div>
+                    <div class="project-info">
+                        <h3>Ember Coffee</h3>
+                        <p>A high-converting landing page for a coffee brand with modern layout and typography.</p>
+                        <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-icon">🍕</div>
+                    <div class="project-info">
+                        <h3>Nkemdi's Restaurant</h3>
+                        <p>A full restaurant website with menus, booking sections and responsive layout.</p>
+                        <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-icon">📰</div>
+                    <div class="project-info">
+                        <h3>Groundwork Magazine</h3>
+                        <p>An editorial-style blog template focusing on complex grid systems and typography.</p>
+                        <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-icon">💡</div>
+                    <div class="project-info">
+                        <h3>BrainSpark Quiz</h3>
+                        <p>Interactive trivia application that tests knowledge and calculates scores in real-time.</p>
+                        <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JS</span></div>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <div class="project-icon">🔢</div>
+                    <div class="project-info">
+                        <h3>Guessy Game</h3>
+                        <p>A logic-based number guessing game using JavaScript events and state management.</p>
+                        <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JS</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CURRICULUM -->
+    <section id="curriculum">
+        <div class="container">
+            <div class="section-header">
+                <h2>30 videos. 4 phases. One clear path.</h2>
+                <p>Structured from absolute beginner to competent developer. No skipping steps.</p>
+            </div>
+            <div class="curriculum-accordion">
+                <!-- PHASE 1 -->
+                <div class="accordion-item active">
+                    <div class="accordion-header">
+                        <h3>Phase 1 — HTML <span class="video-count">(5 Videos)</span></h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <div class="video-list">
+                                <div class="video-entry"><i class="fas fa-play"></i> What is a Website and What is HTML</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Setting Up Your Tools (VS Code)</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Important HTML Tags</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Lists and Page Structure</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Simple HTML Project</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- PHASE 2 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Phase 2 — CSS <span class="video-count">(10 Videos)</span></h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <div class="video-list">
+                                <div class="video-entry"><i class="fas fa-play"></i> What is CSS and How it Works</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Colors and Backgrounds</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Fonts and Text Design</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Understanding the Box Model</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Styling Buttons and Links</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Layout Basics (Display Properties)</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Flexbox Made Simple</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Responsive Design Basics</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> CSS Mini Project</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> CSS Summary</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- PHASE 3 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Phase 3 — JavaScript <span class="video-count">(10 Videos)</span></h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <div class="video-list">
+                                <div class="video-entry"><i class="fas fa-play"></i> What is JavaScript</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Your First Line of JavaScript</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Variables & Data Types</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Operators and Logic</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Functions (Reusable Code)</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Events and Button Clicks</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> DOM Basics (Selecting Elements)</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Forms and User Input</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> JavaScript Mini Project</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> JavaScript Summary</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- PHASE 4 -->
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Phase 4 — Final Projects <span class="video-count">(5 Videos)</span></h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <div class="video-list">
+                                <div class="video-entry"><i class="fas fa-play"></i> Project Setup — Git, GitHub and Netlify</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Project 1: Coffee Brand Landing Page</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Project 2: Restaurant Website Building</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Project 3: Blog and Magazine Page Layout</div>
+                                <div class="video-entry"><i class="fas fa-play"></i> Graduation: Portfolio Update & Next Steps</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHO THIS IS FOR -->
+    <section id="who">
+        <div class="container">
+            <div class="section-header">
+                <h2>Is this course right for you?</h2>
+            </div>
+            <div class="who-is-for">
+                <div class="who-card is-for">
+                    <h3>✅ This IS for you if...</h3>
+                    <ul class="who-list">
+                        <li><i class="fas fa-check"></i> You have zero coding experience but want to start.</li>
+                        <li><i class="fas fa-check"></i> You've tried learning before and got confused.</li>
+                        <li><i class="fas fa-check"></i> You want real projects for your portfolio.</li>
+                        <li><i class="fas fa-check"></i> You want to start freelancing or get hired.</li>
+                        <li><i class="fas fa-check"></i> You want to learn at your own pace from anywhere.</li>
+                    </ul>
+                </div>
+                <div class="who-card is-not-for">
+                    <h3>❌ This is NOT for you if...</h3>
+                    <ul class="who-list">
+                        <li><i class="fas fa-xmark"></i> You already know HTML, CSS, and JS well.</li>
+                        <li><i class="fas fa-xmark"></i> You're looking for advanced React or Frameworks.</li>
+                        <li><i class="fas fa-xmark"></i> You're not willing to build the projects yourself.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AFTER COURSE -->
+    <section style="background-color: var(--secondary-bg);">
+        <div class="container">
+            <div class="section-header">
+                <h2>What you walk away with.</h2>
+            </div>
+            <div class="after-course-grid">
+                <div class="after-item">
+                    <i class="fas fa-globe"></i>
+                    <h3>Live Portfolio</h3>
+                    <p>A professional portfolio website showcasing 5 real projects deployed live on the internet.</p>
+                </div>
+                <div class="after-item">
+                    <i class="fas fa-laptop-code"></i>
+                    <h3>Pro Workflow</h3>
+                    <p>Knowledge of the exact tools and workflow professional developers use every single day.</p>
+                </div>
+                <div class="after-item">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Job Readiness</h3>
+                    <p>A clear starting point and the confidence to start finding freelance work or a frontend job.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EARNINGS -->
+    <section>
+        <div class="container">
+            <div class="section-header">
+                <h2>What can you earn as a frontend developer?</h2>
+                <p>The demand for web development is massive across the globe.</p>
+            </div>
+            <div class="earnings-grid">
+                <div class="earnings-card">
+                    <h3>Freelancing (Entry)</h3>
+                    <span class="amount">₦50k – ₦200k</span>
+                    <span class="period">per project</span>
+                </div>
+                <div class="earnings-card">
+                    <h3>Freelancing (Aged)</h3>
+                    <span class="amount">$500 – $2,000</span>
+                    <span class="period">per project (International)</span>
+                </div>
+                <div class="earnings-card">
+                    <h3>Remote Job</h3>
+                    <span class="amount">$1,500 – $6,000</span>
+                    <span class="period">per month (Remote roles)</span>
+                </div>
+            </div>
+            <p class="disclaimer">These are realistic ranges, not guarantees. Results depend on your effort and consistency.</p>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="pricing-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>One payment. Lifetime access.</h2>
+            </div>
+            <div class="pricing-card">
+                <div class="price-display">$49.99</div>
+                <ul class="pricing-list">
+                    <li><i class="fas fa-check"></i> 30 Complete Video Lessons</li>
+                    <li><i class="fas fa-check"></i> Private Google Drive Access (View-only)</li>
+                    <li><i class="fas fa-check"></i> 5 Complete Project Source Codes</li>
+                    <li><i class="fas fa-check"></i> Lifetime Access — Watch at your pace</li>
+                    <li><i class="fas fa-check"></i> Access from any device (Mobile/Desktop)</li>
+                    <li><i class="fas fa-check"></i> Future updates included at no cost</li>
+                </ul>
+                <button class="btn btn-primary" style="width: 100%; padding: 20px;" onclick="openModal()">Enroll Now — Get Instant Access &rarr;</button>
+                <p class="cta-note">After payment, your private Google Drive link will be sent to you immediately.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <div class="container">
+            <div class="section-header">
+                <h2>Questions? Answered.</h2>
+            </div>
+            <div class="curriculum-accordion faq-accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Do I need any experience?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <p>No. This course starts from absolute zero. If you can open a browser, you can take this course. Every concept is explained from the ground up.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>What do I need to get started?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <p>A laptop or desktop computer, a free VS Code download, and an internet connection. Everything else we use in the course is completely free.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>How is the course delivered?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <p>After purchase, you receive a private Google Drive link. All 30 videos are inside, organized by phase. Videos are view-only and cannot be downloaded.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>How long will it take to finish?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <p>The course is about 3 hours of video content. Most students finish in 2–4 weeks going at a comfortable pace. You have lifetime access so there's no rush.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>Will this get me a job?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <p>This course gives you the skills and portfolio to start applying for junior frontend roles and freelance work. Like any skill, results depend on how much you practice and keep building after the course.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3>What if I get stuck?</h3>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-inner">
+                            <p>The course is built for beginners so every concept is explained from scratch. If something doesn't click, rewatch it — the videos are yours to keep and watch at your own pace.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Your portfolio won't build itself.</h2>
+            <p>Every frontend developer you admire started exactly where you are now. The difference is they started.</p>
+            <button class="btn btn-primary" style="padding: 20px 40px;" onclick="openModal()">Enroll Now &rarr;</button>
+            <div class="final-cta-badges">
+                <span>30 videos</span>
+                <span>•</span>
+                <span>Lifetime access</span>
+                <span>•</span>
+                <span>Start today</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <a href="#" class="logo footer-logo">KP<span>.</span></a>
+            <p class="footer-tagline">From zero to frontend developer — no experience needed.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+            </div>
+            <p class="copyright">&copy; 2025 King Praise. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // STICKY NAVBAR
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ACCORDIONS
+        const accordionItems = document.querySelectorAll('.accordion-item');
+        
+        accordionItems.forEach(item => {
+            const header = item.querySelector('.accordion-header');
+            header.addEventListener('click', () => {
+                // Determine if we're in a curriculum or FAQ section
+                const parent = item.parentElement;
+                
+                // Close other items in the same section
+                parent.querySelectorAll('.accordion-item').forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                    }
+                });
+                
+                // Toggle current item
+                item.classList.toggle('active');
+            });
+        });
+
+        // MODAL LOGIC
+        const modal = document.getElementById('enrollModal');
+        
+        function openModal() {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        }
+        
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
+        }
+        
+        // Close modal on click outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // SMOOTH SCROLL (Already handled by CSS scroll-behavior: smooth, but ensuring anchor tags work as expected)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.getAttribute('href') !== '#') {
+                    // This is handled by CSS, but good to have if more complex logic is needed
+                }
+            });
+        });
+    </script>
+</body>
+</html>
